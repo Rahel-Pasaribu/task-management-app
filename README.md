@@ -1,4 +1,4 @@
-# Simple Task Management App
+# Task Management App
 
 Technical Test — Front-End & Back-End Developer Intern @ Moonlay Technologies
 
