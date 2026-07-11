@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+html {
+  font-family: var(--font-body);
+}
+
+body {
+  background-color: #faf7f0;
+  background-image: radial-gradient(circle at 1px 1px, rgba(27, 36, 50, 0.05) 1px, transparent 0);
+  background-size: 22px 22px;
+  color: #1b2432;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, .font-display {
+  font-family: var(--font-display);
+}
+
+.font-mono-ui {
+  font-family: var(--font-mono);
+}
+
+/* ---------- Buttons ---------- */
+
+.btn-primary {
+  @apply bg-ink-900 hover:bg-ink-700 text-paper font-body font-semibold rounded-md px-4 py-2.5 text-sm tracking-wide transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-card active:translate-y-px;
+}
+
+.btn-secondary {
+  @apply bg-white hover:bg-ink-50 text-ink-700 font-body font-medium rounded-md px-4 py-2.5 text-sm border border-ink-100 transition-colors;
+}
+
+.btn-danger {
+  @apply bg-clay-50 hover:bg-clay-200/60 text-clay-600 font-body font-medium rounded-md px-4 py-2 text-sm transition-colors;
+}
+
+/* ---------- Inputs ---------- */
+
+.input {
+  @apply w-full bg-white border border-ink-100 rounded-md px-3.5 py-2.5 text-sm text-ink-900 placeholder:text-ink-300 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400 transition-shadow font-body;
+}
+
+.label {
+  @apply block text-xs font-semibold uppercase tracking-wider text-ink-500 mb-1.5;
+}
+
+/* ---------- Card ---------- */
+
+.card {
+  @apply bg-white rounded-lg shadow-card border border-ink-100/70;
+}
+
+/* ---------- Status badge / stamp ---------- */
+
+.badge {
+  @apply text-[11px] font-mono-ui font-medium uppercase tracking-wider px-2.5 py-1 rounded-full inline-flex items-center gap-1.5 border;
+}
+
+/* Custom scrollbar for kanban columns */
+.kanban-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.kanban-scroll::-webkit-scrollbar-thumb {
+  background: rgba(27, 36, 50, 0.15);
+  border-radius: 999px;
+}

@@ -1,0 +1,242 @@
+{
+  "info": {
+    "name": "Task Management API - Moonlay Technical Test",
+    "description": "Collection untuk menguji seluruh endpoint Task Management App (Technical Test Software Developer Intern).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8000" },
+    { "key": "access_token", "value": "" },
+    { "key": "task_id", "value": "" },
+    { "key": "user_id", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const data = pm.response.json();",
+                  "if (data.access_token) { pm.collectionVariables.set('access_token', data.access_token); }",
+                  "if (data.user && data.user.id) { pm.collectionVariables.set('user_id', data.user.id); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/auth/login", "host": ["{{base_url}}"], "path": ["auth", "login"] }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": { "method": "POST", "url": "{{base_url}}/auth/login" },
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"access_token\": \"eyJhbGciOiJIUzI1NiIs...\",\n  \"token_type\": \"bearer\",\n  \"user\": {\n    \"id\": \"3f1b7c2a-1234-4d56-9abc-1234567890ab\",\n    \"username\": \"admin\",\n    \"full_name\": \"Admin Moonlay\"\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Current User (Me)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{base_url}}/auth/me", "host": ["{{base_url}}"], "path": ["auth", "me"] }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": { "method": "GET", "url": "{{base_url}}/auth/me" },
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"id\": \"3f1b7c2a-1234-4d56-9abc-1234567890ab\",\n  \"username\": \"admin\",\n  \"full_name\": \"Admin Moonlay\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "List Users (for assignee dropdown)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{base_url}}/users", "host": ["{{base_url}}"], "path": ["users"] }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": { "method": "GET", "url": "{{base_url}}/users" },
+              "status": "OK",
+              "code": 200,
+              "body": "[\n  {\n    \"id\": \"3f1b7c2a-1234-4d56-9abc-1234567890ab\",\n    \"username\": \"admin\",\n    \"full_name\": \"Admin Moonlay\"\n  },\n  {\n    \"id\": \"5a2c8d3b-2345-4e67-8bcd-2345678901bc\",\n    \"username\": \"budi\",\n    \"full_name\": \"Budi Santoso\"\n  }\n]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Tasks",
+      "item": [
+        {
+          "name": "List Tasks",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": {
+              "raw": "{{base_url}}/tasks",
+              "host": ["{{base_url}}"],
+              "path": ["tasks"]
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": { "method": "GET", "url": "{{base_url}}/tasks" },
+              "status": "OK",
+              "code": 200,
+              "body": "[\n  {\n    \"id\": \"9f8e7d6c-3456-4f78-9cde-3456789012cd\",\n    \"title\": \"Setup project repository\",\n    \"description\": \"Inisialisasi repo frontend & backend\",\n    \"status\": \"Done\",\n    \"deadline\": \"2026-07-07T00:00:00Z\",\n    \"assignee_id\": \"5a2c8d3b-2345-4e67-8bcd-2345678901bc\",\n    \"created_at\": \"2026-07-05T02:00:00Z\",\n    \"updated_at\": \"2026-07-07T02:00:00Z\",\n    \"assignee\": {\n      \"id\": \"5a2c8d3b-2345-4e67-8bcd-2345678901bc\",\n      \"username\": \"budi\",\n      \"full_name\": \"Budi Santoso\"\n    }\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Get Task by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{base_url}}/tasks/{{task_id}}", "host": ["{{base_url}}"], "path": ["tasks", "{{task_id}}"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Task",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const data = pm.response.json();",
+                  "if (data.id) { pm.collectionVariables.set('task_id', data.id); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Implementasi login page\",\n  \"description\": \"Buat halaman login dengan hardcode user\",\n  \"status\": \"Todo\",\n  \"deadline\": \"2026-07-15T00:00:00Z\",\n  \"assignee_id\": \"{{user_id}}\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/tasks", "host": ["{{base_url}}"], "path": ["tasks"] }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "originalRequest": { "method": "POST", "url": "{{base_url}}/tasks" },
+              "status": "Created",
+              "code": 201,
+              "body": "{\n  \"id\": \"9f8e7d6c-3456-4f78-9cde-3456789012cd\",\n  \"title\": \"Implementasi login page\",\n  \"description\": \"Buat halaman login dengan hardcode user\",\n  \"status\": \"Todo\",\n  \"deadline\": \"2026-07-15T00:00:00Z\",\n  \"assignee_id\": \"3f1b7c2a-1234-4d56-9abc-1234567890ab\",\n  \"created_at\": \"2026-07-09T04:00:00Z\",\n  \"updated_at\": \"2026-07-09T04:00:00Z\",\n  \"assignee\": {\n    \"id\": \"3f1b7c2a-1234-4d56-9abc-1234567890ab\",\n    \"username\": \"admin\",\n    \"full_name\": \"Admin Moonlay\"\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update Task",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Implementasi login page (revised)\",\n  \"status\": \"In Progress\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/tasks/{{task_id}}", "host": ["{{base_url}}"], "path": ["tasks", "{{task_id}}"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Task Status Only",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"Done\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/tasks/{{task_id}}/status", "host": ["{{base_url}}"], "path": ["tasks", "{{task_id}}", "status"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Task",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{base_url}}/tasks/{{task_id}}", "host": ["{{base_url}}"], "path": ["tasks", "{{task_id}}"] }
+          },
+          "response": [
+            {
+              "name": "204 No Content",
+              "originalRequest": { "method": "DELETE", "url": "{{base_url}}/tasks/{{task_id}}" },
+              "status": "No Content",
+              "code": 204,
+              "body": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Chatbot (Bonus)",
+      "item": [
+        {
+          "name": "Query Chatbot",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"question\": \"Tampilkan semua task yang statusnya belum selesai\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/chatbot/query", "host": ["{{base_url}}"], "path": ["chatbot", "query"] }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": { "method": "POST", "url": "{{base_url}}/chatbot/query" },
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"answer\": \"Task yang belum selesai (2):\\n- Desain skema database (In Progress)\\n- Implementasi endpoint CRUD task (Todo)\"\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
